@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <a href="/login" class="btn btn-danger" style="float:right;">Logout</a>
+    <a href="/profile" class="btn btn-info" style="float:left;">Profile</a>
+    <div class="container mt-5">
+        <h2 class="text-center">Add Task</h2>
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Add Task</h5>
+                        <form method="POST" action="/c_task">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="taskName">Task Name</label>
+                                <input type="text" class="form-control" id="taskName" name="taskName" placeholder="Enter task name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="description">Description</label>
+                                <input type="text" class="form-control" id="description" name="description" placeholder="Enter Description">
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-success btn-block">Add</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container-fluid mt-4 w-50">
+        <h2 class="text-center">ToDo Task</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr class="text-center">
+                    <th scope="col">ToDo Iteams</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+        
+    
+                {% for task in tasks %}
+                <tr class="text-center">
+                    <td>{{ task.title }}</td>
+                    <td>{{ task.progress }}</td>
+                    <td>{{ task.description }}</td>
+                    <td class="d-flex justify-content-end">
+                        <div >
+                            <form method="POST" action="{% url 'mark_finished' task.id %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="task_id" value="{{ task.id }}">
+                                <div role="group">
+                                    <button type="submit" class="btn btn-success">Finished</button>
+                                </div>
+                            </form>
+                        </div>
+                        &nbsp;&nbsp;
+                        <div>
+                            <form method="POST" action="{% url 'delete_task' task.id %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="task_id" value="{{ task.id }}">
+                                <div role="group">
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                </div>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+                
+    
+            </tbody>
+        </table>
+    </div>
+    
+</body>
+</html>
